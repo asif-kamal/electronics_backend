@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -44,6 +45,9 @@ public class Product {
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ProductVariant> productVariantList;
 
     @PrePersist
     protected void onCreate() {
