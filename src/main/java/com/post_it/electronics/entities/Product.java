@@ -19,7 +19,7 @@ import java.util.UUID;
 @Builder
 public class Product {
 
-    @Column
+    @Id
     @GeneratedValue
     private UUID id;
 
