@@ -11,10 +11,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProductVariantDTO {
+public class ProductResourceDTO {
 
     private UUID id;
-    private String color;
-    private String size;
-    private Integer stockQuantity;
+    private String name;
+    private String url;
+    private String type;
+    private boolean isPrimary;
 }
