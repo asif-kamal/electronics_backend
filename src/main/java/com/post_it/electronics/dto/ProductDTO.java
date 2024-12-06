@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -22,4 +23,6 @@ public class ProductDTO {
     private boolean isNewArrival;
     private UUID categoryId;
     private UUID categoryTypeId;
+    private List<ProductVariantDTO> productVariantDTOList;
+    private List<ProductResourceDTO> productResourceDTOList;
 }
