@@ -29,4 +29,15 @@ public class ProductServiceImpl implements ProductService {
         //To-do mapping of products to productDTOs
         return productRepository.findAll();
     }
+
+    private Product createProduct(ProductDTO productDTO) {
+        Product product = new Product();
+        product.setName(productDTO.getName());
+        product.setDescription(productDTO.getDescription());
+        product.setBrand(productDTO.getBrand());
+        product.setIsNewArrival(productDTO.isNewArrival());
+        product.setPrice(productDTO.getPrice());
+
+        return product;
+    }
 }
