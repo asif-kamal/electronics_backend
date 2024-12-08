@@ -27,16 +27,19 @@ public class CategoryService {
     }
 
     public Category createCategory(CategoryDTO categoryDTO) {
+        Category category = mapToEntity(categoryDTO);
 
+        return categoryRepository.save(category);
     }
 
     private Category mapToEntity(CategoryDTO categoryDTO) {
-        Category category = Category.builder()
+        return Category.builder()
                 .code(categoryDTO.getCode())
                 .name(categoryDTO.getName())
                 .description(categoryDTO.getDescription())
                 .categoryTypeList(mapToCategoryTypesList(categoryDTO.getCategoryTypeDTOList()))
                 .build();
+
     }
 
     private List<CategoryType> mapToCategoryTypesList(List<CategoryTypeDTO> categoryTypeDTOList) {
@@ -47,10 +50,5 @@ public class CategoryService {
             categoryType.setDescription(categoryType.getDescription());
             return categoryType;
         }).collect(Collectors.toList());
-    }
-
-    private Object mapToCategoryType(CategoryTypeDTO categoryTypeDTO) {
-
-
     }
 }
