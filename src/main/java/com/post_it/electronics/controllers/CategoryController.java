@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -21,13 +22,20 @@ public class CategoryController {
     public ResponseEntity<Category> getCategoryById(@PathVariable("id") UUID categoryId) {
         Category category = categoryService.getCategory(categoryId);
 
-        return new ResponseEntity<Category>(category, HttpStatus.OK);
+        return new ResponseEntity<>(category, HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Category>> getAllCategories() {
+        List<Category> categoryList = categoryService.getAllCategories();
+
+        return new ResponseEntity<>(categoryList, HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<Category> createCategory(@RequestBody CategoryDTO categoryDTO) {
         Category category = categoryService.createCategory(categoryDTO);
 
-        return new ResponseEntity<Category>(category, HttpStatus.CREATED);
+        return new ResponseEntity<>(category, HttpStatus.CREATED);
     }
 }
