@@ -33,22 +33,32 @@ public class CategoryService {
     }
 
     private Category mapToEntity(CategoryDTO categoryDTO) {
-        return Category.builder()
+        Category category = Category.builder()
                 .code(categoryDTO.getCode())
                 .name(categoryDTO.getName())
                 .description(categoryDTO.getDescription())
-                .categoryTypeList(mapToCategoryTypesList(categoryDTO.getCategoryTypeDTOList()))
                 .build();
 
+        if (null != categoryDTO.getCategoryTypeDTOList()) {
+            List<CategoryType> categoryTypeList = mapToCategoryTypesList(categoryDTO.getCategoryTypeDTOList(), category);
+            category.setCategoryTypeList(categoryTypeList);
+        }
+
+        return category;
     }
 
-    private List<CategoryType> mapToCategoryTypesList(List<CategoryTypeDTO> categoryTypeDTOList) {
+    private List<CategoryType> mapToCategoryTypesList(List<CategoryTypeDTO> categoryTypeDTOList, Category category) {
         return categoryTypeDTOList.stream().map(categoryTypeDTO -> {
             CategoryType categoryType = new CategoryType();
             categoryType.setCode(categoryTypeDTO.getCode());
             categoryType.setName(categoryTypeDTO.getName());
-            categoryType.setDescription(categoryType.getDescription());
+            categoryType.setDescription(categoryTypeDTO.getDescription());
+            categoryType.setCategory(category);
             return categoryType;
         }).collect(Collectors.toList());
+    }
+
+    public List<Category> getAllCategories() {
+        return categoryRepository.findAll();
     }
 }
