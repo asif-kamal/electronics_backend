@@ -4,6 +4,7 @@ import com.post_it.electronics.dto.CategoryDTO;
 import com.post_it.electronics.dto.CategoryTypeDTO;
 import com.post_it.electronics.entities.Category;
 import com.post_it.electronics.entities.CategoryType;
+import com.post_it.electronics.exceptions.ResourceNotFoundException;
 import com.post_it.electronics.repositories.CategoryRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -60,5 +61,26 @@ public class CategoryService {
 
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();
+    }
+
+    public Category updateCategory(CategoryDTO categoryDTO) {
+        Category category = categoryRepository.findById(categoryDTO.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with ID "+categoryDTO.getId()));
+
+        if (null != categoryDTO.getName()) {
+            category.setName(categoryDTO.getName());
+        }
+        if (null != categoryDTO.getDescription()) {
+            category.setDescription(categoryDTO.getDescription());
+        }
+        if (null != categoryDTO.getCode()) {
+            category.setCode(categoryDTO.getCode());
+        }
+        if (categoryDTO.getCategoryTypeDTOList() != null) {
+            List<CategoryType> list = mapToCategoryTypesList(categoryDTO.getCategoryTypeDTOList(), category);
+            category.setCategoryTypeList(list);
+        }
+
+        return categoryRepository.save(category);
     }
 }
