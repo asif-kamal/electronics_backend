@@ -9,6 +9,7 @@ import com.post_it.electronics.repositories.CategoryRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -63,9 +64,9 @@ public class CategoryService {
         return categoryRepository.findAll();
     }
 
-    public Category updateCategory(CategoryDTO categoryDTO) {
-        Category category = categoryRepository.findById(categoryDTO.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Category not found with ID "+categoryDTO.getId()));
+    public Category updateCategory(CategoryDTO categoryDTO, UUID categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with ID "+ categoryDTO.getId()));
 
         if (null != categoryDTO.getName()) {
             category.setName(categoryDTO.getName());
@@ -82,5 +83,9 @@ public class CategoryService {
         }
 
         return categoryRepository.save(category);
+    }
+
+    public void deleteCategory(UUID categoryId) {
+        categoryRepository.deleteById(categoryId);
     }
 }
