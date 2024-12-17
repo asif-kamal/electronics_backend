@@ -3,7 +3,7 @@ package com.post_it.electronics.controllers;
 import com.post_it.electronics.dto.CategoryDTO;
 import com.post_it.electronics.entities.Category;
 import com.post_it.electronics.services.CategoryService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,11 +12,12 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/category")
-@AllArgsConstructor
 public class CategoryController {
 
     private final CategoryService categoryService;
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Category> getCategoryById(@PathVariable("id") UUID categoryId) {
@@ -40,9 +41,16 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Category> updateCategory(@RequestBody CategoryDTO categoryDTO) {
-        Category updatedCategory = categoryService.updateCategory(categoryDTO);
+    public ResponseEntity<Category> updateCategory(@RequestBody CategoryDTO categoryDTO, @PathVariable("id") UUID categoryId) {
+        Category updatedCategory = categoryService.updateCategory(categoryDTO, categoryId);
 
         return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable("id") UUID categoryId) {
+        categoryService.deleteCategory(categoryId);
+
+        return ResponseEntity.ok().build();
     }
 }
