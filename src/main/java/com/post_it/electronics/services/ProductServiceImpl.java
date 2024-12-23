@@ -60,7 +60,7 @@ public class ProductServiceImpl implements ProductService {
             product.setResourceList(mapToProductResources(productDTO.getProductResourceDTOList(), product));
         }
 
-        return product;
+        return productRepository.save(product);
     }
 
     private List<Resource> mapToProductResources(List<ProductResourceDTO> productResourceDTOList, Product product) {
