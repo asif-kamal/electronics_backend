@@ -1,5 +1,6 @@
 package com.post_it.electronics.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,6 +33,7 @@ public class Resource {
     @Column(nullable = false)
     private String type;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
