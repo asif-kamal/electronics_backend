@@ -36,31 +36,46 @@ public class ProductServiceImpl implements ProductService {
 
     private Product mapToProductEntity(ProductDTO productDTO) {
         Product product = new Product();
+        if (null != productDTO.getId()) {
+            product.setId(productDTO.getId());
+        }
         product.setName(productDTO.getName());
         product.setDescription(productDTO.getDescription());
         product.setBrand(productDTO.getBrand());
         product.setIsNewArrival(productDTO.isNewArrival());
         product.setPrice(productDTO.getPrice());
 
+        // Get the category first and validate it exists
         Category category = categoryService.getCategory(productDTO.getCategoryId());
-        if (null != category) {
-            product.setCategory(category);
-            UUID categoryTypeId = productDTO.getCategoryTypeId();
-            Optional<CategoryType> categoryTypeOptional = category.getCategoryTypeList().stream()
-                    .filter(categoryType1 -> categoryType1.getId().equals(categoryTypeId)).findFirst();
-            if (categoryTypeOptional.isPresent()) {
-                CategoryType categoryType = categoryTypeOptional.get();
-                product.setCategoryType(categoryType);
-            }
+        if (category == null) {
+            throw new IllegalArgumentException("Category not found for id: " + productDTO.getCategoryId());
         }
+
+        // Set the category
+        product.setCategory(category);
+
+        // Handle category type
+        UUID categoryTypeId = productDTO.getCategoryTypeId();
+        if (categoryTypeId != null) {
+            Optional<CategoryType> categoryTypeOptional = category.getCategoryTypeList().stream()
+                    .filter(categoryType1 -> categoryType1.getId().equals(categoryTypeId))
+                    .findFirst();
+
+            categoryTypeOptional.ifPresent(product::setCategoryType);
+        }
+
+        // Handle variants
         if (null != productDTO.getProductVariantDTOList()) {
             product.setProductVariantList(mapToProductVariant(productDTO.getProductVariantDTOList(), product));
         }
+
+        // Handle resources
         if (null != productDTO.getProductResourceDTOList()) {
             product.setResourceList(mapToProductResources(productDTO.getProductResourceDTOList(), product));
         }
 
-        return productRepository.save(product);
+        // Return the product without saving it
+        return product;
     }
 
     private List<Resource> mapToProductResources(List<ProductResourceDTO> productResourceDTOList, Product product) {
